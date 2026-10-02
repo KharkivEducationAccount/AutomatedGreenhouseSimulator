@@ -1,45 +1,91 @@
 ﻿using AutomatedGreenhouseSimulator;
+using AutomatedGreenhouseSimulator.Mqtt;
+using MQTTnet;
+using System.Text.Json;
 
 public class Program
 {
-    public static void Main()
+    public static async Task Main()
     {
-        TemperatureSensor outsideTemperatureSensor = new TemperatureSensor("Outside temperature");
-        HumiditySensor outsideHumiditySensor = new HumiditySensor("Outside humidity");
-        TemperatureSensor innerTemperatureSensor = new TemperatureSensor("Inner temperature");
-        HumiditySensor innerHumiditySensor = new HumiditySensor("Inner humidity");
+        SensorConfiguration[] sensors = CreateSensors();
 
-        Greenhouse greenhouse = new Greenhouse();
-        greenhouse.Sensors.Add(outsideTemperatureSensor);
-        greenhouse.Sensors.Add(outsideHumiditySensor);
-        greenhouse.Sensors.Add(innerTemperatureSensor);
-        greenhouse.Sensors.Add(innerHumiditySensor);
+        var factory = new MqttClientFactory();
+        using var mqttClient = factory.CreateMqttClient();
 
-        for (int i = 0; i < 10; i++)
+        var options = new MqttClientOptionsBuilder()
+            .WithTcpServer("127.0.0.1", 1883)
+            .Build();
+
+        await mqttClient.ConnectAsync(options);
+        Console.WriteLine("Connected to MQTT broker.");
+
+        await RunSimulationAsync(mqttClient, sensors);
+
+        await mqttClient.DisconnectAsync();
+    }
+
+    private static SensorConfiguration[] CreateSensors()
+    {
+        return
+            [
+            new (
+                new TemperatureSensor("Outside temperature"),
+                "greenhouse/1/sensors/outside/temperature",
+                "C"),
+            new (
+                new TemperatureSensor("Outside humidity"),
+                "greenhouse/1/sensors/outside/humidity",
+                "%"),
+            new (
+                new TemperatureSensor("Inside temperature"),
+                "greenhouse/1/sensors/inside/temperature",
+                "C"),
+            new (
+                new TemperatureSensor("Inside humidity"),
+                "greenhouse/1/sensors/inside/humidity",
+                "%"),
+            ];
+    }
+
+    private static async Task RunSimulationAsync(
+        IMqttClient mqttClient,
+        SensorConfiguration[] sensors)
+    {
+        for (int iteration = 1; iteration <= 10; iteration++)
         {
-            Console.WriteLine($"Iteration {i+1}");
-            greenhouse.Monitor();
-
-            if (innerTemperatureSensor.Value > 25)
-            {
-                greenhouse.Ventilation.TurnOn();
-            }
-            else
-            {
-                greenhouse.Ventilation.TurnOff();
-            }
+            Console.WriteLine($"Iteration {iteration}.");
 
 
-            if (innerHumiditySensor.Value < 25)
+            foreach (var sensor in sensors)
             {
-                greenhouse.Irrigation.TurnOn();
-            }
-            else
-            {
-                greenhouse.Irrigation.TurnOff();
+                await PublichSensorReadingAsync(mqttClient, sensor);
             }
 
             Console.WriteLine();
+            await Task.Delay(TimeSpan.FromSeconds(2));
         }
+    }
+
+    private static async Task PublichSensorReadingAsync(
+        IMqttClient mqttClient,
+        SensorConfiguration configuration)
+    {
+        configuration.Sensor.ReadValue();
+
+        string payload = JsonSerializer.Serialize(new
+        {
+            value = Math.Round(configuration.Sensor.Value, 2),
+            unit = configuration.Unit,
+            measuredAtUtc = DateTimeOffset.UtcNow
+        });
+
+        var message = new MqttApplicationMessageBuilder()
+            .WithTopic(configuration.Topic)
+            .WithPayload(payload)
+            .Build();
+
+        await mqttClient.PublishAsync(message);
+
+        Console.WriteLine($"Published { configuration.Topic} -> {payload} ");
     }
 }
