@@ -1,4 +1,4 @@
-﻿namespace AutomatedGreenhouseSimulator;
+﻿namespace Models;
 
 public class TemperatureSensor : Sensor
 {

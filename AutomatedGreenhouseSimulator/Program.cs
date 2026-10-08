@@ -1,5 +1,6 @@
 ﻿using AutomatedGreenhouseSimulator;
 using AutomatedGreenhouseSimulator.Mqtt;
+using Models;
 using MQTTnet;
 using System.Text.Json;
 
@@ -33,7 +34,7 @@ public class Program
                 "greenhouse/1/sensors/outside/temperature",
                 "C"),
             new (
-                new TemperatureSensor("Outside humidity"),
+                new HumiditySensor("Outside humidity"),
                 "greenhouse/1/sensors/outside/humidity",
                 "%"),
             new (
@@ -41,7 +42,7 @@ public class Program
                 "greenhouse/1/sensors/inside/temperature",
                 "C"),
             new (
-                new TemperatureSensor("Inside humidity"),
+                new HumiditySensor("Inside humidity"),
                 "greenhouse/1/sensors/inside/humidity",
                 "%"),
             ];
