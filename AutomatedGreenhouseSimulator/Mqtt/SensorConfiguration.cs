@@ -1,4 +1,6 @@
-﻿namespace AutomatedGreenhouseSimulator.Mqtt;
+﻿using Models;
+
+namespace AutomatedGreenhouseSimulator.Mqtt;
 
 public class SensorConfiguration
 {
