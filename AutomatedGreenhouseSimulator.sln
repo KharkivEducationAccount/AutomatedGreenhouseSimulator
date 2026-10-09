@@ -5,7 +5,9 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutomatedGreenhouseSimulator", "AutomatedGreenhouseSimulator\AutomatedGreenhouseSimulator.csproj", "{90787954-1449-4066-91A6-2DA1A4E02502}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{27E308BE-833E-4CBA-B64D-C1F5340C87FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{27E308BE-833E-4CBA-B64D-C1F5340C87FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenhouseScada.Web", "GreenhouseScada.Web\GreenhouseScada.Web.csproj", "{CB3DC616-2904-4FD2-8F25-BB85F5596AF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{27E308BE-833E-4CBA-B64D-C1F5340C87FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27E308BE-833E-4CBA-B64D-C1F5340C87FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27E308BE-833E-4CBA-B64D-C1F5340C87FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB3DC616-2904-4FD2-8F25-BB85F5596AF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB3DC616-2904-4FD2-8F25-BB85F5596AF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB3DC616-2904-4FD2-8F25-BB85F5596AF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB3DC616-2904-4FD2-8F25-BB85F5596AF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

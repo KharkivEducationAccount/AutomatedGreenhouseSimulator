@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 450">
+<rect width="900" height="450" fill="#eef5fb"/>
+<rect x="0" y="380" width="900" height="70" fill="#9b7b55"/>
+<polygon points="220,150 450,40 680,150" fill="#d8efe0" stroke="#4a7a5a"
+stroke-width="4"/>
+<rect x="220" y="150" width="460" height="230" fill="#e9f7ee"
+stroke="#4a7a5a" stroke-width="4"/>
+<line x1="450" y1="40" x2="450" y2="380" stroke="#4a7a5a" strokewidth="2"/>
+<g fill="#3f9b52">
+<ellipse cx="500" cy="365" rx="22" ry="14"/>
+<ellipse cx="560" cy="365" rx="22" ry="14"/>
+<ellipse cx="620" cy="365" rx="22" ry="14"/>
+</g>
+<text x="30" y="25" font-family="Arial" font-size="14"
+fill="#555">Зовні</text>
+<text x="470" y="175" font-family="Arial" font-size="14"
+fill="#555">Теплиця</text>
+</svg>

@@ -52,7 +52,7 @@ public class Program
         IMqttClient mqttClient,
         SensorConfiguration[] sensors)
     {
-        for (int iteration = 1; iteration <= 10; iteration++)
+        for (int iteration = 1; ; iteration++)
         {
             Console.WriteLine($"Iteration {iteration}.");
 

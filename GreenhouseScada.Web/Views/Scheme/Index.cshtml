@@ -1,0 +1,19 @@
+﻿@model IReadOnlyList<SensorView>
+@{
+    ViewData["Title"] = "Мнемосхема";
+}
+<h2>Мнемосхема теплиці</h2>
+
+<div class="scheme">
+    @foreach (SensorView s in Model)
+    {
+        <div class="sensor" data-topic="@s.Topic"
+             style="left: @(s.X)px; top: @(s.Y)px;">
+            <div class="name">@s.Name</div>
+            <div class="value">—</div>
+        </div>
+    }
+</div>
+@section Scripts {
+    <script src="~/js/scheme.js"></script>
+}
