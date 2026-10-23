@@ -9,5 +9,7 @@ namespace GreenhouseScada.Web.Data
             : base(options)
         {
         }
+
+        public DbSet<SensorSample> SensorSamples => Set<SensorSample>();
     }
 }

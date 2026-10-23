@@ -1,24 +1,26 @@
 ﻿@model IReadOnlyList<SensorView>
+
 @{
-ViewData["Title"] = "Мнемосхема";
-var uk = new System.Globalization.CultureInfo("uk-UA");
-DateTime today = DateTime.Today;
-DateTime first = new DateTime(today.Year, today.Month, 1);
-int offset = ((int)first.DayOfWeek + 6) % 7; 
-int days = DateTime.DaysInMonth(today.Year, today.Month);
+    ViewData["Title"] = "Мнемосхема";
+    var uk = new System.Globalization.CultureInfo("uk-UA");
+    DateTime today = DateTime.Today;
+    DateTime first = new DateTime(today.Year, today.Month, 1);
+    int offset = ((int)first.DayOfWeek + 6) % 7; 
+    int days = DateTime.DaysInMonth(today.Year, today.Month);
 }
+
 <h2>Мнемосхема теплиці</h2>
 <div class="scada-page">
 <div class="scheme">
 @foreach (SensorView s in Model)
 {
-<div class="sensor" data-topic="@s.Topic"
-style="left: @(s.X)px; top: @(s.Y)px;">
-<div class="name">@s.Name</div>
-<div class="value">—</div>
-</div>
+    <div class="sensor" data-topic="@s.Topic" data-max="@s.Max" style="left: @(s.X)px; top: @(s.Y)px;">
+        <div class="name">@s.Name</div>
+        <div class="value">—</div>
+    </div>
 }
 </div>
+
 <table class="cal">
 <caption>@uk.TextInfo.ToTitleCase(today.ToString("MMMM yyyy", uk))
 </caption>
@@ -42,6 +44,11 @@ if ((offset + d) % 7 == 0)
 </tr>
 </table>
 </div>
+
+<form method="post" asp-action="Save">
+    <button class="btn btn-success mt-2">Зберегти покази</button>
+</form>
+
 @section Scripts {
 <script src="~/js/scheme.js"></script>
 }

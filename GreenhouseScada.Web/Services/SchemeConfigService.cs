@@ -8,20 +8,20 @@ namespace GreenhouseScada.Web.Services
         {
             new SensorView
             {
-                Name = "Температура зовні", Topic = "greenhouse/1/sensors/outside/temperature", X = 20, Y = 40
+                Name = "Температура зовні", Topic = "greenhouse/1/sensors/outside/temperature", X = 20, Y = 40, Max = 30
             },
             new SensorView
             {
-                Name = "Вологість зовні", Topic = "greenhouse/1/sensors/outside/humidity", X = 20, Y = 130
+                Name = "Вологість зовні", Topic = "greenhouse/1/sensors/outside/humidity", X = 20, Y = 130, Max = 50
 
             },
             new SensorView
             {
-                Name = "Температура всередині", Topic = "greenhouse/1/sensors/inside/temperature", X = 250, Y = 190
+                Name = "Температура всередині", Topic = "greenhouse/1/sensors/inside/temperature", X = 250, Y = 190, Max = 20
             },
             new SensorView
             {
-                Name = "Вологість всередині", Topic = "greenhouse/1/sensors/inside/humidity", X = 250, Y = 280
+                Name = "Вологість всередині", Topic = "greenhouse/1/sensors/inside/humidity", X = 250, Y = 280, Max = 40
             }
         };
 
