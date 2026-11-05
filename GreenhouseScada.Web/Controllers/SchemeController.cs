@@ -1,6 +1,7 @@
 ﻿using GreenhouseScada.Web.Data;
 using GreenhouseScada.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 namespace GreenhouseScada.Web.Controllers;
 public class SchemeController : Controller
 {
@@ -25,7 +26,7 @@ public class SchemeController : Controller
     }
 
     [HttpPost]
-    public IActionResult Save()
+    public async Task<IActionResult> Save()
     {
         foreach(var  sensor in _cache.GetAll())
         {
@@ -38,13 +39,17 @@ public class SchemeController : Controller
             });
         }
 
-        _db.SaveChanges();
+        await _db.SaveChangesAsync();
 
         return RedirectToAction("History");
     }
 
-    public IActionResult History()
+    public async Task <IActionResult> History()
     {
-        return View(_db.SensorSamples.OrderByDescending(s=> s.Id).Take(50).ToList());
+        var samples = await _db.SensorSamples.OrderByDescending(s => s.Id)
+                                             .Take(50)
+                                             .ToListAsync();
+
+        return View(samples);
     }
 }
