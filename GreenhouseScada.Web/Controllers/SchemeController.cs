@@ -1,8 +1,11 @@
 ﻿using GreenhouseScada.Web.Data;
 using GreenhouseScada.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 namespace GreenhouseScada.Web.Controllers;
+
+[Authorize]
 public class SchemeController : Controller
 {
     private readonly LiveValuesCache _cache;
@@ -26,6 +29,7 @@ public class SchemeController : Controller
     }
 
     [HttpPost]
+    [Authorize(Policy = "CanReadSavings")]
     public async Task<IActionResult> Save()
     {
         foreach(var  sensor in _cache.GetAll())

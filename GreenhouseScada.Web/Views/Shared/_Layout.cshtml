@@ -29,6 +29,17 @@ justify-content-between">
 <li class="nav-item">
 <a class="nav-link text-dark" asp-area="" aspcontroller="Home" asp-action="Privacy">Privacy</a>
 </li>
+
+@if(User.Identity != null && User.Identity.IsAuthenticated)
+{
+<li class="nav-item">
+<a class="nav-link text-dark" asp-area="" aspcontroller="Scheme" asp-action="Index">Scheme</a>
+</li>
+<li class="nav-item">
+<a class="nav-link text-dark" asp-area="" aspcontroller="Scheme" asp-action="History">History</a>
+</li>
+}
+
 </ul>
 <div class="scada-clock">
 <b id="clock-time">@DateTime.Now.ToString("HH:mm:ss")
