@@ -32,6 +32,7 @@ public class SchemeController : Controller
     [Authorize(Policy = "CanReadSavings")]
     public async Task<IActionResult> Save()
     {
+        string userName = User.Identity?.Name ?? "unknown";
         foreach(var  sensor in _cache.GetAll())
         {
             _db.SensorSamples.Add(new SensorSample
@@ -39,7 +40,8 @@ public class SchemeController : Controller
                     Topic = sensor.Topic,
                     Value = sensor.Value,
                     Unit = sensor.Unit,
-                    MeasuredAtUtc = sensor.MeasuredAtUtc
+                    MeasuredAtUtc = sensor.MeasuredAtUtc,
+                    SavedBy = userName
             });
         }
 
