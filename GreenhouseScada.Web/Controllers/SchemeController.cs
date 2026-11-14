@@ -1,8 +1,11 @@
 ﻿using GreenhouseScada.Web.Data;
 using GreenhouseScada.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 namespace GreenhouseScada.Web.Controllers;
+
+[Authorize]
 public class SchemeController : Controller
 {
     private readonly LiveValuesCache _cache;
@@ -26,8 +29,10 @@ public class SchemeController : Controller
     }
 
     [HttpPost]
+    [Authorize(Policy = "CanReadSavings")]
     public async Task<IActionResult> Save()
     {
+        string userName = User.Identity?.Name ?? "unknown";
         foreach(var  sensor in _cache.GetAll())
         {
             _db.SensorSamples.Add(new SensorSample
@@ -35,7 +40,8 @@ public class SchemeController : Controller
                     Topic = sensor.Topic,
                     Value = sensor.Value,
                     Unit = sensor.Unit,
-                    MeasuredAtUtc = sensor.MeasuredAtUtc
+                    MeasuredAtUtc = sensor.MeasuredAtUtc,
+                    SavedBy = userName
             });
         }
 
