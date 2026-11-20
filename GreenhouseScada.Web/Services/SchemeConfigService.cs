@@ -25,6 +25,21 @@ namespace GreenhouseScada.Web.Services
             }
         };
 
+        public bool UpdateMax(string topic, int max)
+        {
+            foreach (SensorView sensor in _sensors)
+            {
+                if (sensor.Topic == topic)
+                {
+                    sensor.Max = max;
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public IReadOnlyList<SensorView> GetSensors()
         {
             return _sensors;

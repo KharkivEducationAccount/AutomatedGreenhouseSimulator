@@ -1,8 +1,11 @@
 ﻿using GreenhouseScada.Web.Data;
+using GreenhouseScada.Web.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GreenhouseScada.Web.Controllers;
 
+[Authorize(Roles = AppRoles.Admin)]
 public class JournalController : Controller
 {
     private readonly ApplicationDbContext _db;
