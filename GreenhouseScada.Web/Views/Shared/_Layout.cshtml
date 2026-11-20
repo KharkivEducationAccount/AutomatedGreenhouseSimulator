@@ -43,6 +43,20 @@ justify-content-between">
 </li>
 }
 
+@if (User.IsInRole(AppRoles.Technician) || User.IsInRole(AppRoles.Admin))
+{
+    <li class="nav-item"><a class="nav-link text-dark" asp-controller="Settings"
+        asp-action="Index">Settings</a></li>
+}
+@if (User.IsInRole(AppRoles.Admin))
+{
+    <li class="nav-item"><a class="nav-link text-dark" asp-controller="Users"
+        asp-action="Index">Users</a></li>
+    <li class="nav-item"><a class="nav-link text-dark" asp-controller="Journal"
+        asp-action="Index">Journal</a></li>
+}
+
+
 </ul>
 <div class="scada-clock">
 <b id="clock-time">@DateTime.Now.ToString("HH:mm:ss")
