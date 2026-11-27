@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using GreenhouseScada.Web.Services;
 using Microsoft.AspNetCore.Authorization;
+using GreenhouseScada.Web.Security;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,7 +27,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
     options.Lockout.AllowedForNewUsers = true;
 })
+.AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -57,15 +60,33 @@ builder.Services.AddAuthorization(options =>
 
     options.AddPolicy("CanReadSavings", policy =>
     {
-        policy.RequireAuthenticatedUser();
+        policy.RequireRole(AppRoles.Operator, AppRoles.Technician,
+            AppRoles.Admin);
     });
+
+    options.AddPolicy("CanConfigure", policy =>
+    {
+        policy.RequireRole(AppRoles.Technician, AppRoles.Admin);
+    });
+
 });
+
+builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+{
+    options.ValidationInterval = TimeSpan.FromMinutes(1);
+});
+
 
 builder.Services.AddSingleton<LiveValuesCache>();
 builder.Services.AddSingleton<SchemeConfigService>();
 builder.Services.AddHostedService<MqttListener>();
 
 var app = builder.Build();
+
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    await IdentitySeeder.SeedAsync(scope.ServiceProvider);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
