@@ -78,6 +78,7 @@ builder.Services.Configure<SecurityStampValidatorOptions>(options =>
 
 
 builder.Services.AddSingleton<LiveValuesCache>();
+builder.Services.AddSingleton<ActuatorStateCache>();
 builder.Services.AddSingleton<SchemeConfigService>();
 builder.Services.AddHostedService<MqttListener>();
 

@@ -25,6 +25,18 @@ namespace GreenhouseScada.Web.Services
             }
         };
 
+        private readonly List<ActuatorView> _actuators = new List<ActuatorView>
+        {
+            new ActuatorView
+            {
+                Name = "Вентиляція", Topic = "greenhouse/1/actuators/ventilation/state", Kind = "fan", X = 470, Y = 190
+            },
+            new ActuatorView
+            {
+                Name = "Полив", Topic = "greenhouse/1/actuators/irrigation/state", Kind = "water", X = 470, Y = 280
+            }
+        };
+
         public bool UpdateMax(string topic, int max)
         {
             foreach (SensorView sensor in _sensors)
@@ -43,6 +55,11 @@ namespace GreenhouseScada.Web.Services
         public IReadOnlyList<SensorView> GetSensors()
         {
             return _sensors;
+        }
+
+        public IReadOnlyList<ActuatorView> GetActuators()
+        {
+            return _actuators;
         }
     }
 }

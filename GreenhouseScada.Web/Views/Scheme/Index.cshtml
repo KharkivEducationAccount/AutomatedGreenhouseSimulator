@@ -19,6 +19,18 @@
         <div class="value">—</div>
     </div>
 }
+
+@foreach (ActuatorView a in (IReadOnlyList<ActuatorView>)ViewBag.Actuators)
+{
+    <div class="actuator off" data-topic="@a.Topic" data-kind="@a.Kind" style="left: @(a.X)px; top: @(a.Y)px;">
+        <span class="icon">@(a.Kind == "fan" ? "✻" : "💧")</span>
+        <div class="info">
+            <div class="name">@a.Name</div>
+            <div class="state">ВИМК</div>
+        </div>
+    </div>
+}
+
 </div>
 
 <table class="cal">

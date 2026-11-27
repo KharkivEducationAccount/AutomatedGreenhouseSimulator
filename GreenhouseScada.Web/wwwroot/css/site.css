@@ -106,3 +106,53 @@ body {
     background: #ffd6d6;
     outline: 2px solid #000000;
 }
+
+.actuator {
+    position: absolute;
+    width: 180px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .25);
+    background: #e3e3e3;
+    color: #666;
+}
+
+    .actuator .icon {
+        display: inline-block;
+        font-size: 28px;
+        line-height: 1;
+    }
+
+    .actuator .state {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .actuator.on {
+        background: #d4f5dc;
+        color: #14672b;
+        outline: 2px solid #2e9e4d;
+    }
+
+        .actuator.on[data-kind="fan"] .icon {
+            animation: actuator-spin 1s linear infinite;
+        }
+
+        .actuator.on[data-kind="water"] .icon {
+            animation: actuator-pulse 1s ease-in-out infinite;
+        }
+
+@keyframes actuator-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes actuator-pulse {
+    50% {
+        transform: scale(1.3);
+    }
+}

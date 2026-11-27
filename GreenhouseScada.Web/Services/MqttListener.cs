@@ -9,12 +9,14 @@ namespace GreenhouseScada.Web.Services
         private static readonly JsonSerializerOptions JsonOptions =
         new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         private readonly LiveValuesCache _cache;
+        private readonly ActuatorStateCache _actuatorCache;
         private readonly IConfiguration _config;
         private readonly ILogger<MqttListener> _logger;
-        public MqttListener(LiveValuesCache cache, IConfiguration config,
+        public MqttListener(LiveValuesCache cache, ActuatorStateCache actuatorCache, IConfiguration config,
         ILogger<MqttListener> logger)
         {
             _cache = cache;
+            _actuatorCache = actuatorCache;
             _config = config;
             _logger = logger;
         }
@@ -47,6 +49,7 @@ namespace GreenhouseScada.Web.Services
             MqttClientSubscribeOptions subscribeOptions =
             factory.CreateSubscribeOptionsBuilder()
             .WithTopicFilter(_config["Mqtt:TopicFilter"]!)
+            .WithTopicFilter(_config["Mqtt:ActuatorTopicFilter"]!)
             .Build();
             await client.SubscribeAsync(subscribeOptions, stoppingToken);
             _logger.LogInformation("Підписано на {Filter}",
@@ -59,20 +62,40 @@ namespace GreenhouseScada.Web.Services
             {
                 string topic = e.ApplicationMessage.Topic;
                 string json = e.ApplicationMessage.ConvertPayloadToString();
-                MqttPayload? payload = JsonSerializer.Deserialize<MqttPayload>
-                (json, JsonOptions);
-                if (payload is not null)
+
+                // Стан виконавчих механізмів приходить в окремих топіках
+                if (topic.Contains("/actuators/"))
                 {
-                    SensorReading reading = new SensorReading
+                    ActuatorPayload? actuatorPayload =
+                        JsonSerializer.Deserialize<ActuatorPayload>(json, JsonOptions);
+                    if (actuatorPayload is not null)
                     {
-                        Topic = topic,
-                        Value = payload.Value,
-                        Unit = payload.Unit,
-                        MeasuredAtUtc = payload.MeasuredAtUtc
-                    };
-                    _cache.Update(reading);
+                        _actuatorCache.Update(new ActuatorState
+                        {
+                            Topic = topic,
+                            IsOn = actuatorPayload.IsOn,
+                            Reason = actuatorPayload.Reason,
+                            ChangedAtUtc = actuatorPayload.ChangedAtUtc
+                        });
+                    }
+
+                    return Task.CompletedTask;
                 }
-            }
+
+                    MqttPayload? payload = JsonSerializer.Deserialize<MqttPayload>
+                (json, JsonOptions);
+                    if (payload is not null)
+                    {
+                        SensorReading reading = new SensorReading
+                        {
+                            Topic = topic,
+                            Value = payload.Value,
+                            Unit = payload.Unit,
+                            MeasuredAtUtc = payload.MeasuredAtUtc
+                        };
+                        _cache.Update(reading);
+                    }
+                }
             catch (Exception ex)
             {
                 _logger.LogWarning(ex, "Не вдалося обробити повідомлення");
@@ -85,6 +108,13 @@ namespace GreenhouseScada.Web.Services
             public double Value { get; set; }
             public string Unit { get; set; } = "";
             public DateTimeOffset MeasuredAtUtc { get; set; }
+        }
+
+        private class ActuatorPayload
+        {
+            public bool IsOn { get; set; }
+            public string Reason { get; set; } = "";
+            public DateTimeOffset ChangedAtUtc { get; set; }
         }
     }
 }
