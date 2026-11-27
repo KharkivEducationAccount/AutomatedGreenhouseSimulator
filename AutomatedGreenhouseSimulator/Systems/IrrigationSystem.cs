@@ -1,8 +1,10 @@
-﻿namespace AutomatedGreenhouseSimulator.Systems;
+﻿using AutomatedGreenhouseSimulator.Interfaces;
 
-public class IrrigationSystem
+namespace AutomatedGreenhouseSimulator.Systems;
+
+public class IrrigationSystem : IActuator
 {
-    public bool IsOn { get; set; }
+    public bool IsOn { get; private set; }
 
     public void TurnOn()
     {
