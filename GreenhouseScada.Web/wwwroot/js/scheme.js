@@ -23,7 +23,7 @@ async function refresh() {
 
         const list = await res.json();
 
-        console.log('Полученные данные:', list);
+        console.log('Дані:', list);
 
         list.forEach(showReading);
     } catch (e) {
